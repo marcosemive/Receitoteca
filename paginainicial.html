@@ -1,0 +1,227 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Receitoteca — Início</title>
+  <link rel="stylesheet" href="styles.css">
+</head>
+
+<body>
+  <header class="top-bar home-bar">
+    <div class="nav-container">
+      <img src="logo2.png" alt="Receitoteca" class="logo">
+
+      <nav class="menu">
+        <a href="#" id="link-inicio">Início</a>
+        <a href="#receitas" id="link-receitas">Receitas</a>
+        <a href="#">Favoritas</a>
+        <a href="#" id="link-chef">Área do Chef</a>
+      </nav>
+
+      <div class="nav-actions">
+        <input type="text" placeholder="Buscar receitas..." class="search">
+        <button class="logout" title="Sair">
+          <img src="logout.png" alt="Sair">
+        </button>
+      </div>
+    </div>
+  </header>
+
+  <section id="hero" class="hero">
+    <div class="hero-overlay">
+      <h1>Descubra receitas incríveis</h1>
+      <p>
+        Explore milhares de receitas deliciosas, desde pratos tradicionais até criações modernas.
+        Encontre referências de qualidade para sua próxima refeição.
+      </p>
+    </div>
+  </section>
+
+  <section id="receitas" class="home-container">
+    <div id="receitas-header" class="section-header">
+      <h2>Receitas recentes</h2>
+      <p>Melhores receitas recentemente adicionadas pelos chefs</p>
+    </div>
+
+    <section class="recipes-grid">
+      <article class="recipe-card" onclick="abrirReceita('carbonara')">
+        <div class="recipe-image">
+          <img src="carbonara.png" alt="Pasta carbonara tradicional">
+          <span class="tag salgada">Salgada</span>
+        </div>
+        <div class="recipe-content">
+          <h3>Pasta carbonara tradicional</h3>
+          <p class="description">Macarrão à carbonara é um prato italiano feito com massa, ovos e queijo...</p>
+          <div class="recipe-meta">
+            <span class="comments">(50 comentários)</span>
+            <span class="chef">Chef: Paulo Benetton</span>
+          </div>
+        </div>
+      </article>
+
+      <article class="recipe-card" onclick="abrirReceita('brigadeiro')">
+        <div class="recipe-image">
+          <img src="brigadeiro.png" alt="Bolo de brigadeiro belga">
+          <span class="tag doce">Doce</span>
+        </div>
+        <div class="recipe-content">
+          <h3>Bolo de brigadeiro belga</h3>
+          <p class="description">Bolo de chocolate recheado e coberto com creme de chocolate belga...</p>
+          <div class="recipe-meta">
+            <span class="comments">(32 comentários)</span>
+            <span class="chef">Chef: Sandra Freitas</span>
+          </div>
+        </div>
+      </article>
+
+      <article class="recipe-card" onclick="abrirReceita('salada')">
+        <div class="recipe-image">
+          <img src="salada.png" alt="Salada simples">
+          <span class="tag vegana">Vegana</span>
+        </div>
+        <div class="recipe-content">
+          <h3>Salada simples</h3>
+          <p class="description">Salada feita com folhas, tomate, pepino e temperos naturais...</p>
+          <div class="recipe-meta">
+            <span class="comments">(39 comentários)</span>
+            <span class="chef">Chef: Gabriela Carvalho</span>
+          </div>
+        </div>
+      </article>
+
+      <article class="recipe-card" onclick="abrirReceita('panqueca')">
+        <div class="recipe-image">
+          <img src="panqueca.png" alt="Panquecas americanas">
+          <span class="tag doce">Doce</span>
+        </div>
+        <div class="recipe-content">
+          <h3>Panquecas americanas</h3>
+          <p class="description">Panquecas fofinhas feitas com farinha, ovos, leite e fermento...</p>
+          <div class="recipe-meta">
+            <span class="comments">(52 comentários)</span>
+            <span class="chef">Chef: Leonardo Matias</span>
+          </div>
+        </div>
+      </article>
+    </section>
+  </section>
+
+  <div class="overlay" id="overlay">
+    <div class="receita-modal">
+      <button class="close" onclick="fecharReceita()">✕</button>
+      <div class="modal-hero">
+        <img id="modal-img" src="" alt="Imagem da receita">
+        <div class="modal-hero-content">
+          <span class="tag" id="modal-tag"></span>
+          <h2 id="modal-title"></h2>
+        </div>
+      </div>
+      <div class="modal-info-bar">
+        <span id="modal-time">⏱</span>
+        <span id="modal-servings">👥</span>
+        <span id="modal-author">👨‍🍳</span>
+        <div class="modal-actions">❤️ 💬</div>
+      </div>
+      <div class="modal-content">
+        <section>
+          <h3>Ingredientes</h3>
+          <ul id="modal-ingredients"></ul>
+        </section>
+        <section>
+          <h3>Modo de preparo</h3>
+          <ol id="modal-steps"></ol>
+        </section>
+      </div>
+    </div>
+  </div>
+
+  <div id="chef-form-overlay" class="overlay">
+    <div class="premium-modal">
+      <div class="modal-image-header">
+        <img src="carbonara.png" id="form-img-preview" alt="Receita">
+        <div class="header-text-overlay">
+          <div class="tags-row">
+            <div class="tag-wrapper">
+              <span class="tag-label status" id="form-tag-display" onclick="toggleTagSelector()" style="cursor: pointer;">Salgada</span>
+              <select id="form-tag-select" onchange="atualizarTag(this.value)" style="display: none;">
+                <option value="Salgada">Salgada</option>
+                <option value="Doce">Doce</option>
+                <option value="Vegana">Vegana</option>
+              </select>
+            </div>
+          </div>
+          <h2 id="form-titulo-overlay" contenteditable="true">Nome da Receita</h2>
+        </div>
+        <div class="image-action-buttons">
+          <div class="action-btn" onclick="document.getElementById('input-foto').click()">
+            <div class="icon-circle">+</div>
+            <span>Inserir foto</span>
+          </div>
+          <input type="file" id="input-foto" accept="image/*" style="display:none">
+          <div class="action-btn" onclick="fecharForm()">
+            <div class="icon-circle">✕</div>
+            <span>Desativar guia</span>
+          </div>
+          <input type="file" id="input-file" style="display:none">
+        </div>
+      </div>
+
+      <div class="modal-content-body">
+        <div class="recipe-meta-bar">
+          <div class="meta-item">
+            <span class="meta-icon">🕒</span>
+            <div class="meta-text">
+              <label>Tempo</label>
+              <input type="text" id="form-time" value="30 min">
+            </div>
+          </div>
+          <div class="meta-item">
+            <span class="meta-icon">👥</span>
+            <div class="meta-text">
+              <label>Porções</label>
+              <input type="text" id="form-servings" value="4 pessoas">
+            </div>
+          </div>
+          <div class="meta-item">
+            <span class="meta-icon">👤</span>
+            <div class="meta-text">
+              <label>Feito por:</label>
+              <strong>Paulo Benetton</strong>
+            </div>
+          </div>
+        </div>
+
+        <hr class="separator">
+
+        <div class="recipe-inputs">
+          <h3 class="section-title">Ingredientes<span class="required">*</span></h3>
+          <textarea id="form-ingredients" placeholder="• Ingrediente 1"></textarea>
+          <h3 class="section-title">Modo de preparo</h3>
+          <div class="steps-container">
+            <textarea id="form-steps" placeholder="1. Coloque uma panela grande..."></textarea>
+          </div>
+        </div>
+
+        <div class="modal-footer-btns">
+          <button id="btnSalvarReceita" class="btn-save-gray">Salvar Receita</button>
+          <button class="btn-share-outline">Compartilhar em outros locais</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <section id="chef-area" class="chef-area" style="display: none;">
+    <h2 class="chef-title">Área do Chef</h2>
+    <p class="chef-sub">Gerencie suas receitas</p>
+    <div class="chef-actions">
+      <button id="btnCriarReceita">➕ Criar nova receita</button>
+      <button id="btnEditarReceita">✏️ Editar minhas receitas</button>
+    </div>
+    <div id="chef-lista-receitas" class="chef-recipe-list"></div>
+  </section>
+
+  <script src="home.js"></script>
+</body>
+</html>
