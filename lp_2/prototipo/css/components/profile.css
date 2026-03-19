@@ -1,0 +1,40 @@
+.perfil-box {
+  margin-bottom: 14px;
+}
+
+.perfil-opcao {
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
+  margin-bottom: 12px;
+  cursor: pointer;
+}
+
+.perfil-opcao input[type="radio"] {
+  width: 22px;
+  height: 22px;
+  margin-top: 2px;
+}
+
+.requisitos {
+  list-style: none;
+  margin: 8px 0 14px 0;
+  padding-left: 0;
+  color: #666;
+  font-size: 13px;
+}
+
+.requisitos li {
+  margin-bottom: 6px;
+}
+
+.requisitos li.ok {
+  color: #0b8a3b;
+  font-weight: 600;
+}
+
+.erro {
+  color: #e70731;
+  font-size: 14px;
+  margin-top: 6px;
+}
