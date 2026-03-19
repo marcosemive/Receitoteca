@@ -1,0 +1,228 @@
+.home-bar {
+  height: 72px;
+}
+
+.nav-container {
+  width: 100%;
+  max-width: 1300px;
+  margin: 0 auto;
+  padding: 0 24px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.logo {
+  height: 42px;
+}
+
+.menu {
+  display: flex;
+  gap: 28px;
+}
+
+.menu a {
+  text-decoration: none;
+  color: #555;
+  font-weight: 600;
+}
+
+.menu a:hover {
+  color: #e70731;
+}
+
+.nav-actions {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+}
+
+.search {
+  padding: 10px 14px;
+  border-radius: 20px;
+  border: 1px solid #ddd;
+  outline: none;
+  font-size: 14px;
+  width: 220px;
+}
+
+.logout {
+  background: none;
+  border: none;
+  padding: 0;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.logout img {
+  width: 22px;
+  height: 22px;
+}
+
+.logout:hover img {
+  opacity: .85;
+}
+
+.hero {
+  margin-top: 72px;
+  height: 500px;
+  background: url("../../images/fundo.png") center/cover no-repeat;
+  position: relative;
+}
+
+.hero-overlay {
+  position: relative;
+  z-index: 2;
+  height: 100%;
+  max-width: 800px;
+  margin: 0 auto;
+  padding: 0 20px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  color: #fff;
+}
+
+.hero-overlay h1 {
+  font-size: 36px;
+  margin-bottom: 14px;
+}
+
+.hero-overlay p {
+  font-size: 18px;
+  line-height: 1.5;
+}
+
+.home-container {
+  padding: 40px 60px;
+}
+
+.section-header h2 {
+  font-size: 26px;
+  margin-bottom: 6px;
+  padding-top: 50px;
+}
+
+.section-header p {
+  color: #666;
+  margin-bottom: 30px;
+}
+
+.recipes-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 25px;
+}
+
+.recipe-card {
+  background: #ffffff;
+  border-radius: 16px;
+  overflow: hidden;
+  box-shadow: 0 8px 20px rgba(0,0,0,0.08);
+  cursor: pointer;
+}
+
+.recipe-card:hover {
+  box-shadow: 0 14px 28px rgba(0,0,0,0.12);
+}
+
+.recipe-image {
+  position: relative;
+  height: 180px;
+}
+
+.recipe-image img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.tag {
+  position: absolute;
+  top: 12px;
+  right: 12px;
+  padding: 4px 12px;
+  font-size: 12px;
+  border-radius: 14px;
+  color: #fff;
+  font-weight: 600;
+}
+
+.tag.salgada {
+  background: #e70731;
+}
+
+.tag.doce {
+  background: #ff006e;
+}
+
+.tag.vegana {
+  background: #2a9d8f;
+}
+
+.recipe-content {
+  padding: 15px;
+}
+
+.recipe-content h3 {
+  font-size: 16px;
+  margin-bottom: 8px;
+}
+
+.recipe-content .description {
+  font-size: 14px;
+  color: #666;
+  margin-bottom: 12px;
+}
+
+.recipe-meta {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  font-size: 13px;
+  color: #999;
+}
+
+#receitas {
+  scroll-margin-top: 40px;
+}
+
+@media (max-width: 1200px) {
+  .recipes-grid {
+    grid-template-columns: repeat(3, 1fr);
+  }
+}
+
+@media (max-width: 900px) {
+  .recipes-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+@media (max-width: 768px) {
+  .menu {
+    display: none;
+  }
+
+  .search {
+    width: 160px;
+  }
+
+  .hero-overlay h1 {
+    font-size: 30px;
+  }
+}
+
+@media (max-width: 600px) {
+  .home-container {
+    padding: 30px 20px;
+  }
+
+  .recipes-grid {
+    grid-template-columns: 1fr;
+  }
+}
