@@ -1,5 +1,6 @@
-export const receitas = {
-  carbonara: {
+export const receitas = [
+  {
+    id: 1,
     img: "images/carbonara.png",
     tag: "Salgada",
     title: "Pasta carbonara tradicional",
@@ -19,7 +20,8 @@ export const receitas = {
       "Finalize com pimenta"
     ]
   },
-  brigadeiro: {
+  {
+    id: 2,
     img: "images/brigadeiro.png",
     tag: "Doce",
     title: "Bolo de brigadeiro belga",
@@ -39,7 +41,8 @@ export const receitas = {
       "Finalize"
     ]
   },
-  salada: {
+  {
+    id: 3,
     img: "images/salada.png",
     tag: "Vegana",
     title: "Salada simples",
@@ -58,7 +61,8 @@ export const receitas = {
       "Tempere e sirva"
     ]
   },
-  panqueca: {
+  {
+    id: 4,
     img: "images/panqueca.png",
     tag: "Doce",
     title: "Panquecas americanas",
@@ -77,4 +81,4 @@ export const receitas = {
       "Asse dos dois lados"
     ]
   }
-};
+];
