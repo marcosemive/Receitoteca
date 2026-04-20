@@ -1,6 +1,6 @@
 export const receitas = [
   {
-    id: 1,
+    id: '71d81969-9e2b-4b3c-903a-e6d64f6cd2d4',
     img: "images/carbonara.png",
     tag: "Salgada",
     title: "Pasta carbonara tradicional",
@@ -21,7 +21,7 @@ export const receitas = [
     ]
   },
   {
-    id: 2,
+    id:'bd6732c5-4a99-4036-bda7-580eb895a262',
     img: "images/brigadeiro.png",
     tag: "Doce",
     title: "Bolo de brigadeiro belga",
@@ -42,7 +42,7 @@ export const receitas = [
     ]
   },
   {
-    id: 3,
+    id: '9b26577f-dfcb-4f68-b847-dac7b2d2f435',
     img: "images/salada.png",
     tag: "Vegana",
     title: "Salada simples",
@@ -62,7 +62,7 @@ export const receitas = [
     ]
   },
   {
-    id: 4,
+    id: 'a19dc4a1-ec12-4207-93eb-3a92ad7ce041',
     img: "images/panqueca.png",
     tag: "Doce",
     title: "Panquecas americanas",
@@ -82,3 +82,4 @@ export const receitas = [
     ]
   }
 ];
+
