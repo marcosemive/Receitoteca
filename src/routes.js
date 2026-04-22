@@ -1,34 +1,26 @@
 import { Router } from 'express';
 import { v4 as uuidv4} from 'uuid';
 import {receitas} from './data/receitas.js';
-import { validarReceita } from './middlewares/validations.js';
+import { validarReceita } from './middlewares/validation.js';
 import HttpError from './utils/HttpError.js';
 const route = Router();
 
 
 route.post('/receitas', (req,res,next) => {
-    try{
         validarReceita(req.body);
         const id = uuidv4();
         const receita = { id, ...req.body };
         receitas.push(receita);
         
         return res.status(201).json(receita);
-    }
-    
-    catch (err){
-        next(err);
-    }
-
-})
+ });
 
 route.get('/receitas', (req,res) => {
-    return res.json(receitas);
+    return res.status(200).json(receitas);
 });
 
 
 route.get('/receitas/:id', (req,res,next) => {
-    try {
     const { id } = req.params;
 
     const receita = receitas.find(receita => receita.id === id);
@@ -36,17 +28,11 @@ route.get('/receitas/:id', (req,res,next) => {
     if(!receita){
         throw new HttpError('Receita não encontrada', 404);
     }
-
-    return res.json(receita);}
-
-    catch(err) {
-        next(err);
-    }
-
+        console.log('bateu no GET por ID');
+    return res.status(200).json(receita);
 });
 
 route.put('/receitas/:id', (req, res, next) => {
-    try {
         validarReceita(req.body);          
         const { id } = req.params;         
         const index = receitas.findIndex(r => r.id === id);  
@@ -58,14 +44,10 @@ route.put('/receitas/:id', (req, res, next) => {
         receitas[index] = { id, ...req.body };  
         return res.json(receitas[index]);       
         
-    } catch (err) {
-        next(err);  
-    }
 });
 
 
 route.delete('/receitas/:id',(req,res,next) => {
-    try{
     const { id } = req.params;
 
     const index = receitas.findIndex((receita) => receita.id === id);
@@ -77,11 +59,37 @@ route.delete('/receitas/:id',(req,res,next) => {
     receitas.splice(index,1);
 
     return res.status(204).send();
-}
-   catch (err) {
-        next(err);  
-    }
 
 })
+
+// 404 handler
+route.use((req, res, next) => {
+  res.status(404).json({ error: 'Content not found!' });
+});
+
+// Error handler
+route.use((err, req, res, next) => {
+  // console.error(err.stack);
+
+  if (err instanceof HttpError) {
+    return res.status(err.code).json({ message: err.message });
+  }
+
+  return res.status(500).json({ message: 'Something broke!' });
+});
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 export default route;

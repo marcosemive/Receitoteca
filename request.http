@@ -1,0 +1,54 @@
+@server=https://potential-chainsaw-r46j46rqwq7g3wxgx-3000.app.github.dev
+### Criando uma Receita
+POST {{server}}/api/receitas
+Content-Type: application/json
+
+{
+    "img": "imagem/imagem",
+    "tag": "salgada",
+    "title": "frango xadrez",
+    "time": "1h20min",
+    "servings": 8,
+    "author": "José Roberto",
+    "ingredients": "Frango,shoyu",
+    "steps": "Cozinhe o frango"
+}
+
+### Ler uma Receita
+GET {{server}}/api/receitas
+
+
+### Ler uma Receita específica a partir do ID
+GET {{server}}/api/receitas/9b26577f-dfcb-4f68-b847-dac7b2d2f435
+
+
+### Alterar uma receita específica
+PUT {{server}}/api/receitas/9b26577f-dfcb-4f68-b847-dac7b2d2f435
+Content-Type: application/json
+
+{
+    "id": "9b26577f-dfcb-4f68-b847-dac7b2d2f435",
+    "img": "images/salada.png",
+    "tag": "Vegana",
+    "title": "Salada Tropical",
+    "time": "15 min",
+    "servings": "2",
+    "author": "Gabriela Carvalho",
+    "ingredients": [
+      "Alface",
+      "Tomate cereja",
+      "Pepino",
+      "Cebola",
+      "Manga",
+      "Maçã",
+      "Azeite e sal"
+    ],
+    "steps": [
+      "Lave os ingredientes",
+      "Corte tudo",
+      "Tempere e sirva"
+    ]
+  }
+
+###Remover uma receita pelo ID
+DELETE {{server}}/api/receitas/9b26577f-dfcb-4f68-b847-dac7b2d2f435
