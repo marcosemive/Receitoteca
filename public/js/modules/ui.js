@@ -1,15 +1,14 @@
-import { receitas } from './dados.js';
-
-export function renderizarCards() {
+import { getReceita } from '../api.js';
+export function renderizarCards(receitas) {
   const grid = document.querySelector('.recipes-grid');
   if (!grid) return;
 
   grid.innerHTML = '';
 
-  Object.entries(receitas).forEach(([id, r]) => {
+  receitas.forEach(r => {
     const card = document.createElement('article');
     card.className = 'recipe-card';
-    card.setAttribute('onclick', `abrirReceita('${id}')`);
+    card.setAttribute('onclick', `abrirReceita('${r.id}')`);
 
     const primeiroIngrediente = r.ingredients[0] || "Receita deliciosa";
 
@@ -46,8 +45,8 @@ export function initBusca() {
   }
 }
 
-export function abrirReceita(id) {
-  const r = receitas[id];
+export async function abrirReceita(id) {
+  const r = await getReceita(id);
   if (!r) return;
 
   document.getElementById("modal-img").src = r.img;

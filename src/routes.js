@@ -1,7 +1,7 @@
 import { Router } from 'express';
 import { v4 as uuidv4} from 'uuid';
 import {receitas} from './data/receitas.js';
-import { validarReceita } from './middlewares/validation.js';
+import { validarReceita } from './utils/validation.js';
 import HttpError from './utils/HttpError.js';
 const route = Router();
 
@@ -42,7 +42,7 @@ route.put('/receitas/:id', (req, res, next) => {
         }
         
         receitas[index] = { id, ...req.body };  
-        return res.json(receitas[index]);       
+        return res.status(200).json(receitas[index]);       
         
 });
 
@@ -62,14 +62,13 @@ route.delete('/receitas/:id',(req,res,next) => {
 
 })
 
-// 404 handler
 route.use((req, res, next) => {
   res.status(404).json({ error: 'Content not found!' });
 });
 
-// Error handler
+
 route.use((err, req, res, next) => {
-  // console.error(err.stack);
+
 
   if (err instanceof HttpError) {
     return res.status(err.code).json({ message: err.message });

@@ -1,5 +1,4 @@
-@server=https://potential-chainsaw-r46j46rqwq7g3wxgx-3000.app.github.dev
-### Criando uma Receita
+@server=https://automatic-system-jj7xj74vgj55hprpp-3000.app.github.dev
 POST {{server}}/api/receitas
 Content-Type: application/json
 
@@ -14,7 +13,7 @@ Content-Type: application/json
     "steps": "Cozinhe o frango"
 }
 
-### Ler uma Receita
+### Ler as Receitas
 GET {{server}}/api/receitas
 
 

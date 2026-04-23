@@ -1,22 +1,30 @@
-import { receitas } from './dados.js';
 import { fecharForm } from './utils.js';
+import { getReceitas, getReceita, criarReceita, atualizarReceita, deletarReceita } from '../api.js';
+import { renderizarCards } from './ui.js';
 
 let modoEdicao = null;
 
-export function carregarReceitasDoChef() {
-  const lista = document.getElementById("chef-lista-receitas");
+export async function carregarReceitasDoChef() {
+ const lista = document.getElementById("chef-lista-receitas");
   lista.innerHTML = "";
   const chefNome = "Paulo Benetton";
 
-  Object.entries(receitas).forEach(([id, r]) => {
-    if (r.author === chefNome) {
-      const item = document.createElement("div");
-      item.className = "chef-item";
-      item.innerHTML = `<span>${r.title}</span> <strong>Editar </strong>`;
-      item.onclick = () => editarReceita(id);
-      lista.appendChild(item);
-    }
-  });
+  const receitas = await getReceitas();
+
+  receitas.filter(r => r.author === chefNome).forEach(r => {
+    const item = document.createElement("div");
+    item.className = "chef-item";
+    item.innerHTML = `
+  <span>${r.title}</span>
+  <div style="display:flex;gap:8px;">
+    <strong class="btn-editar">Editar</strong>
+    <strong class="btn-deletar" style="background:#fff0f0;color:#e70731;">Deletar</strong>
+  </div>
+`;
+item.querySelector('.btn-editar').onclick = (e) => { e.stopPropagation(); editarReceita(r.id); };
+item.querySelector('.btn-deletar').onclick = (e) => { e.stopPropagation(); deletarReceitaChef(r.id); };
+    item.onclick = () => editarReceita(r.id);
+    lista.appendChild(item);});
 }
 
 function limparForm() {
@@ -46,8 +54,8 @@ export function abrirFormEditar() {
   alert("Clique em uma receita para editar.");
 }
 
-export function editarReceita(id) {
-  const r = receitas[id];
+export async function editarReceita(id) {
+  const r = await getReceita(id);
   if (!r) return;
 
   modoEdicao = id;
@@ -70,7 +78,7 @@ export function editarReceita(id) {
   document.getElementById("chef-form-overlay").style.display = "flex";
 }
 
-export function salvarReceita(e) {
+export async function salvarReceita(e) {
   e.preventDefault();
 
   const titulo = document.getElementById("form-titulo-overlay").innerText;
@@ -81,78 +89,42 @@ export function salvarReceita(e) {
   const ingredientes = document.getElementById("form-ingredients").value.split("\n");
   const passos = document.getElementById("form-steps").value.split("\n");
 
+  const dadosReceita = {
+    title: titulo,
+    tag: tag,
+    img: foto,
+    time: tempo,
+    servings: porcoes,
+    author: localStorage.getItem("chefNome") || "Chef Paulo",
+    ingredients: ingredientes,
+    steps: passos
+  };
+
   if (modoEdicao) {
-    const receitaAtualizada = {
-      ...receitas[modoEdicao],
-      title: titulo,
-      tag: tag,
-      img: foto,
-      time: tempo,
-      servings: porcoes,
-      ingredients: ingredientes,
-      steps: passos
-    };
-    
-    receitas[modoEdicao] = receitaAtualizada;
-
-    const cardExistente = document.querySelector(`.recipe-card[onclick="abrirReceita('${modoEdicao}')"]`);
-    if (cardExistente) {
-      cardExistente.querySelector('h3').innerText = titulo;
-      cardExistente.querySelector('img').src = foto;
-      const tagSpan = cardExistente.querySelector('.tag');
-      tagSpan.innerText = tag;
-      tagSpan.className = 'tag ' + tag.toLowerCase();
-    }
-
+    await atualizarReceita(modoEdicao, dadosReceita);
+    const receitas = await getReceitas();
+    renderizarCards(receitas);
     alert("Alterações salvas!");
-  } else {
-    const novoId = "receita_" + Date.now();
-    receitas[novoId] = {
-      title: titulo,
-      tag: tag,
-      img: foto,
-      time: tempo,
-      servings: porcoes,
-      author: localStorage.getItem("chefNome") || "Chef Paulo",
-      ingredients: ingredientes,
-      steps: passos
-    };
-
-    const receitasGrid = document.querySelector(".recipes-grid");
-    if (receitasGrid) {
-      const novoCard = document.createElement("article");
-      novoCard.className = "recipe-card";
-      novoCard.setAttribute("onclick", `abrirReceita('${novoId}')`);
-
-      novoCard.innerHTML = `
-        <div class="recipe-image">
-          <img src="${foto}" alt="${titulo}">
-          <span class="tag ${tag.toLowerCase()}">${tag}</span>
-        </div>
-
-        <div class="recipe-content">
-          <h3>${titulo}</h3>
-          <p class="description">
-            ${ingredientes[0] || "Receita adicionada recentemente..."}
-          </p>
-
-          <div class="recipe-meta">
-            <span class="comments">(0 comentários)</span>
-            <span class="chef">Chef: ${localStorage.getItem("chefNome")}</span>
-          </div>
-        </div>
-      `;
-
-      receitasGrid.prepend(novoCard);
-    }
-
+} else {
+    await criarReceita(dadosReceita);
+    const receitas = await getReceitas();
+    renderizarCards(receitas);
     alert("Nova receita publicada!");
   }
 
   modoEdicao = null;
   fecharForm();
-  carregarReceitasDoChef();
+  await carregarReceitasDoChef();
 }
+
+async function deletarReceitaChef(id) {
+  if (!confirm('Tem certeza que deseja deletar esta receita?')) return;
+  await deletarReceita(id);
+  const receitas = await getReceitas();
+  renderizarCards(receitas);
+  await carregarReceitasDoChef();
+}
+
 
 window.abrirFormCriar = abrirFormCriar;
 window.abrirFormEditar = abrirFormEditar;

@@ -1,15 +1,16 @@
-import './modules/dados.js';
-
 import { initBusca, abrirReceita, fecharReceita, renderizarCards } from './modules/ui.js';
 import { abrirFormCriar, abrirFormEditar, salvarReceita } from './modules/chef.js';
 import { initNavegacao, restaurarLayoutNormal, mostrarChefArea, mostrarInicio } from './modules/navegacao.js';
 import { toggleTagSelector, atualizarTag, fecharForm, initUploadFoto } from './modules/utils.js';
-
+import { getReceitas } from './api.js';
 localStorage.setItem("chefLogado", "true");
 localStorage.setItem("chefNome", "Paulo Benetton");
 
-document.addEventListener("DOMContentLoaded", () => {
-  renderizarCards();
+  document.addEventListener("DOMContentLoaded", async () => {
+  const receitas = await getReceitas();
+  console.log(receitas);
+
+  renderizarCards(receitas)
   initBusca();
   initNavegacao();
   initUploadFoto();
