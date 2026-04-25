@@ -1,5 +1,5 @@
 import { fecharForm } from './utils.js';
-import { getReceitas, getReceita, criarReceita, atualizarReceita, deletarReceita } from '../api.js';
+import { getReceitas, getReceita, criarReceita, atualizarReceita, deletarReceita, uploadImagem } from '../api.js';
 import { renderizarCards } from './ui.js';
 
 let modoEdicao = null;
@@ -35,6 +35,8 @@ function limparForm() {
   document.getElementById("form-servings").value = "4";
   document.getElementById("form-ingredients").value = "";
   document.getElementById("form-steps").value = "";
+  document.getElementById('input-foto').value = '';
+
 }
 
 export function abrirFormCriar() {
@@ -57,6 +59,7 @@ export async function editarReceita(id) {
   const r = await getReceita(id);
   if (!r) return;
 
+  document.getElementById('input-foto').value = '';
   modoEdicao = id;
 
   document.getElementById('form-tag-display').innerText = r.tag;
@@ -64,7 +67,7 @@ export async function editarReceita(id) {
   
   const preview = document.getElementById("form-img-preview");
   preview.src = r.img || "images/default.png";
-  preview.dataset.changed = "false";
+  preview.dataset.originalImg = r.img; 
 
   document.getElementById("form-titulo-overlay").innerText = r.title;
   document.getElementById("form-time").value = r.time;
@@ -88,17 +91,28 @@ export async function salvarReceita(e) {
   const ingredientes = document.getElementById("form-ingredients").value.split("\n");
   const passos = document.getElementById("form-steps").value.split("\n");
 
+
+
+  const inputFoto = document.getElementById('input-foto');
+const preview = document.getElementById('form-img-preview');
+let imgPath = modoEdicao ? (preview.dataset.originalImg || foto) : foto;
+
+if (inputFoto.files[0]) {
+  imgPath = await uploadImagem(inputFoto.files[0]);
+}
+  
   const dadosReceita = {
     title: titulo,
     tag: tag,
-    img: foto,
+    img: imgPath,
     time: tempo,
     servings: porcoes,
     author: localStorage.getItem("chefNome") || "Chef Paulo",
     ingredients: ingredientes,
-    steps: passos
+    steps: passos 
   };
   
+  try{
   if (modoEdicao) {
     await atualizarReceita(modoEdicao, dadosReceita);
     const receitas = await getReceitas();
@@ -114,7 +128,9 @@ export async function salvarReceita(e) {
   modoEdicao = null;
   fecharForm();
   await carregarReceitasDoChef();
-}
+  } catch (err) {
+  alert(err.message);
+}}
 
 async function deletarReceitaChef(id) {
   if (!confirm('Tem certeza que deseja deletar esta receita?')) return;
