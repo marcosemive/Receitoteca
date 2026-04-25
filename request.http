@@ -1,4 +1,6 @@
-@server=https://automatic-system-jj7xj74vgj55hprpp-3000.app.github.dev
+@server=https://ominous-space-dollop-wr5wr59pxprgf569j.github.dev
+
+### Criação de Receita
 POST {{server}}/api/receitas
 Content-Type: application/json
 

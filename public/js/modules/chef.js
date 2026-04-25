@@ -23,7 +23,6 @@ export async function carregarReceitasDoChef() {
 `;
 item.querySelector('.btn-editar').onclick = (e) => { e.stopPropagation(); editarReceita(r.id); };
 item.querySelector('.btn-deletar').onclick = (e) => { e.stopPropagation(); deletarReceitaChef(r.id); };
-    item.onclick = () => editarReceita(r.id);
     lista.appendChild(item);});
 }
 
@@ -99,7 +98,7 @@ export async function salvarReceita(e) {
     ingredients: ingredientes,
     steps: passos
   };
-
+  
   if (modoEdicao) {
     await atualizarReceita(modoEdicao, dadosReceita);
     const receitas = await getReceitas();

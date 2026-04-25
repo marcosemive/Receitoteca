@@ -8,7 +8,6 @@ localStorage.setItem("chefNome", "Paulo Benetton");
 
   document.addEventListener("DOMContentLoaded", async () => {
   const receitas = await getReceitas();
-  console.log(receitas);
 
   renderizarCards(receitas)
   initBusca();

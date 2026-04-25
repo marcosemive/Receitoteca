@@ -6,7 +6,7 @@ import HttpError from './utils/HttpError.js';
 const route = Router();
 
 
-route.post('/receitas', (req,res,next) => {
+route.post('/receitas', (req,res,) => {
         validarReceita(req.body);
         const id = uuidv4();
         const receita = { id, ...req.body };
@@ -20,7 +20,7 @@ route.get('/receitas', (req,res) => {
 });
 
 
-route.get('/receitas/:id', (req,res,next) => {
+route.get('/receitas/:id', (req,res) => {
     const { id } = req.params;
 
     const receita = receitas.find(receita => receita.id === id);
@@ -28,11 +28,10 @@ route.get('/receitas/:id', (req,res,next) => {
     if(!receita){
         throw new HttpError('Receita não encontrada', 404);
     }
-        console.log('bateu no GET por ID');
     return res.status(200).json(receita);
 });
 
-route.put('/receitas/:id', (req, res, next) => {
+route.put('/receitas/:id', (req, res) => {
         validarReceita(req.body);          
         const { id } = req.params;         
         const index = receitas.findIndex(r => r.id === id);  
