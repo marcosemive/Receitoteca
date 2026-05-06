@@ -7,9 +7,11 @@
     "dev": "node --watch ./src/init_server.js"
   },
   "dependencies": {
+    "@paralleldrive/cuid2": "^3.3.0",
+    "cors": "^2.8.6",
     "express": "^5.2.1",
+    "express-async-errors": "^3.1.1",
     "morgan": "^1.10.1",
-    "multer": "^2.1.1",
-    "uuid": "^14.0.0"
+    "multer": "^2.1.1"
   }
 }

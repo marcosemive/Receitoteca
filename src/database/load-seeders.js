@@ -1,1 +1,0 @@
-(equivalente a seeders .js)

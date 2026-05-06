@@ -1,82 +1,94 @@
-import { Router } from 'express';
-import { v4 as uuidv4} from 'uuid';
-import {receitas} from './data/receitas.js';
-import { validarReceita, verificarDuplicata } from './utils/validation.js';
-import HttpError from './utils/HttpError.js';
+import express from 'express';
+import Receita from './models/Receita.js';
 import { upload } from './utils/upload.js';
-const route = Router();
-
-
-route.post('/receitas', (req, res) => {
-        validarReceita(req.body);
-        if (verificarDuplicata(receitas, req.body)) {
-            throw new HttpError('Receita já cadastrada', 409);
-        }
-        const id = uuidv4();
-        const receita = { 
-          id, 
-          ...req.body,
-          servings: Number(req.body.servings)
-        };
-        receitas.push(receita);
-        
-        return res.status(201).json(receita);
+ 
+// Classe personalizada para erros HTTP (substitui o HttpError.js)
+class HTTPError extends Error {
+  constructor(message, code) {
+    super(message);
+    this.code = code;
+  }
+}
+ 
+const router = express.Router();
+ 
+router.post('/receitas', async (req, res) => {
+  try {
+    const receita = req.body;
+ 
+    const createdReceita = await Receita.create(receita);
+ 
+    return res.json(createdReceita);
+  } catch (error) {
+    throw new HTTPError(error.message, 400);
+  }
+});
+ 
+router.get('/receitas', async (req, res) => {
+  try {
+    const receitas = await Receita.read();
+ 
+    return res.json(receitas);
+  } catch (error) {
+    throw new HTTPError('Unable to read receitas', 400);
+  }
+});
+ 
+router.get('/receitas/:id', async (req, res) => {
+  try {
+    const id = req.params.id;
+ 
+    const receita = await Receita.readById(id);
+ 
+    return res.json(receita);
+  } catch (error) {
+    throw new HTTPError(error.message, 404);
+  }
+});
+ 
+router.put('/receitas/:id', async (req, res) => {
+  try {
+    const receita = req.body;
+ 
+    const id = req.params.id;
+ 
+    const updatedReceita = await Receita.update({ ...receita, id });
+ 
+    return res.json(updatedReceita);
+  } catch (error) {
+    throw new HTTPError(error.message, 400);
+  }
+});
+ 
+router.delete('/receitas/:id', async (req, res) => {
+  const id = req.params.id;
+ 
+  if (await Receita.remove(id)) {
+    res.sendStatus(204);
+  } else {
+    throw new HTTPError('Unable to remove receita', 400);
+  }
+});
+ 
+// Rota específica de upload de imagem
+router.post('/upload', upload.single('img'), async (req, res) => {
+  try {
+    return res.json({ img: `images/${req.file.filename}` });
+  } catch (error) {
+    throw new HTTPError('Falha no upload da imagem', 400);
+  }
 });
 
-route.get('/receitas', (req, res) => {
-    return res.status(200).json(receitas);
+router.use((req, res, next) => {
+  res.status(404).json({ message: 'Content not found!' });
 });
-
-route.get('/receitas/:id', (req, res) => {
-    const { id } = req.params;
-    const receita = receitas.find(receita => receita.id === id);
-    if(!receita){
-        throw new HttpError('Receita não encontrada', 404);
-    }
-    return res.status(200).json(receita);
-});
-
-route.put('/receitas/:id', (req, res) => {
-        validarReceita(req.body);          
-        const { id } = req.params;         
-        if (verificarDuplicata(receitas, req.body, id)) {
-            throw new HttpError('Receita já cadastrada', 409);
-        }
-        const index = receitas.findIndex(r => r.id === id);  
-        if (index === -1) {                
-            throw new HttpError('Receita não encontrada', 404);
-        }
-        receitas[index] = { 
-          id, 
-          ...req.body,
-          servings: Number(req.body.servings)
-        };
-        return res.status(200).json(receitas[index]);       
-});
-
-route.delete('/receitas/:id', (req, res) => {
-    const { id } = req.params;
-    const index = receitas.findIndex((receita) => receita.id === id);
-    if (index === -1) {
-        throw new HttpError('Receita não encontrada', 404);
-    }
-    receitas.splice(index, 1);
-    return res.status(204).send();
-})
-
-route.post('/upload', upload.single('img'), (req, res) => {
-  return res.json({ img: `images/${req.file.filename}` });
-});
-
-route.use((req, res, next) => {
-  res.status(404).json({ error: 'Content not found!' });
-});
-
-route.use((err, req, res, next) => {
-  if (err instanceof HttpError) {
+ 
+router.use((err, req, res, next) => {
+  if (err instanceof HTTPError) {
     return res.status(err.code).json({ message: err.message });
   }
   return res.status(500).json({ message: 'Something broke!' });
 });
-
-export default route;
+ 
+export default router;
+ 
