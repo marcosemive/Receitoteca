@@ -1,6 +1,6 @@
 import { resolve } from 'node:path';
 import { readFileSync } from 'node:fs';
-import Receita from '../models/Receita.js';
+import Receita from '../models/receitas.js';
  
 async function up() {
   const file = resolve('src', 'database', 'seeders.json');

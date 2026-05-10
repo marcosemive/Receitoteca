@@ -1,5 +1,5 @@
 import express from 'express';
-import Receita from './models/Receita.js';
+import Receita from './models/receitas.js';
 import { upload } from './utils/upload.js';
  
 // Classe personalizada para erros HTTP (substitui o HttpError.js)

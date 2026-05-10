@@ -3,14 +3,13 @@
   "version": "1.0.0",
   "type": "module",
   "scripts": {
-    "start": "node ./src/init_server.js",
-    "dev": "node --watch ./src/init_server.js"
+    "start": "node ./src/index.js",
+    "dev": "node --watch ./src/index.js"
   },
   "dependencies": {
     "@paralleldrive/cuid2": "^3.3.0",
     "cors": "^2.8.6",
     "express": "^5.2.1",
-    "express-async-errors": "^3.1.1",
     "morgan": "^1.10.1",
     "multer": "^2.1.1"
   }
