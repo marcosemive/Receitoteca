@@ -1,8 +1,8 @@
-import { createId } from '@paralleldrive/cuid2';
-import { receitas } from '../database/data.js';
+import Database from '../database/database.js';
  
-function create(data) {
-  const { img, tag, title, time, servings, author, ingredients, steps } = data;
+async function create ({img, tag, title, time, servings, author, ingredients, steps }){
+  const db = await Database.connect();
+
  
   // Validação dos campos obrigatórios
   if (!img || !tag || !title || !time || !servings || !author || !ingredients || !steps) {
@@ -35,7 +35,6 @@ function create(data) {
  
   const receita = { id, img, tag, title, time, servings: Number(servings), author, ingredients, steps };
  
-  receitas.push(receita);
  
   return receita;
 }

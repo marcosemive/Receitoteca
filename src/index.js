@@ -28,7 +28,6 @@ server.get('/', (req, res) => {
   res.redirect('/paginainicial.html');
 });
  
-await Seed.up();
  
 server.listen(3000, () => {
   console.log('Server is running on port 3000');
