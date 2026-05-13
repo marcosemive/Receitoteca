@@ -4,12 +4,15 @@
   "type": "module",
   "scripts": {
     "start": "node ./src/index.js",
-    "dev": "node --watch ./src/index.js"
+    "dev": "node --watch ./src/index.js",
+    "db:load": "node src/database/load.js",
+    "db:drop": "rm src/database/db.sqlite",
+    "db:reload": "npm run db:drop && npm run db:load"
   },
   "dependencies": {
-    "cors": "^2.8.6",
     "express": "^5.2.1",
     "morgan": "^1.10.1",
-    "multer": "^2.1.1"
+    "multer": "^2.1.1",
+    "sqlite-async": "^1.2.2"
   }
 }

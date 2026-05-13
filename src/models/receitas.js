@@ -1,104 +1,145 @@
 import Database from '../database/database.js';
  
-async function create ({img, tag, title, time, servings, author, ingredients, steps }){
+async function create(data) {
   const db = await Database.connect();
-
  
-  // Validação dos campos obrigatórios
-  if (!img || !tag || !title || !time || !servings || !author || !ingredients || !steps) {
+  const { img, tag, title, time, servings, author, ingredients, steps } = data;
+ 
+  if (img && tag && title && time && servings && author && ingredients && steps) {
+    if (title.trim() === 'Nome da Receita') {
+      throw new Error('Por favor, altere o nome da receita');
+    }
+ 
+    const sql = `
+      INSERT INTO
+        receitas (img, tag, title, time, servings, author, ingredients, steps)
+      VALUES
+        (?, ?, ?, ?, ?, ?, ?, ?)
+    `;
+ 
+    const { lastID } = await db.run(sql, [
+      img,
+      tag,
+      title,
+      time,
+      Number(servings),
+      author,
+      JSON.stringify(ingredients),
+      JSON.stringify(steps),
+    ]);
+ 
+    return await readById(lastID);
+  } else {
     throw new Error('Todos os campos são obrigatórios');
   }
- 
-  // Validação do nome padrão
-  if (title.trim() === 'Nome da Receita') {
-    throw new Error('Por favor, altere o nome da receita');
-  }
- 
-  // Verificação de duplicata
-  const duplicate = receitas.find(
-    (r) =>
-      r.id !== data.id &&
-      r.title === title &&
-      r.author === author &&
-      r.time === time &&
-      r.tag === tag &&
-      r.servings === Number(servings) &&
-      JSON.stringify(r.ingredients) === JSON.stringify(ingredients) &&
-      JSON.stringify(r.steps) === JSON.stringify(steps)
-  );
- 
-  if (duplicate) {
-    throw new Error('Receita já cadastrada');
-  }
- 
-  const id = data.id ?? createId();
- 
-  const receita = { id, img, tag, title, time, servings: Number(servings), author, ingredients, steps };
- 
- 
-  return receita;
 }
  
-function read() {
-  return receitas;
+async function read() {
+  const db = await Database.connect();
+ 
+  const sql = `
+    SELECT
+      id, img, tag, title, time, servings, author, ingredients, steps
+    FROM
+      receitas
+  `;
+ 
+  const receitas = await db.all(sql);
+ 
+  return receitas.map((r) => ({
+    ...r,
+    ingredients: JSON.parse(r.ingredients),
+    steps: JSON.parse(r.steps),
+  }));
 }
  
-function readById(id) {
-  const receita = receitas.find((r) => r.id === id);
+async function readById(id) {
+  const db = await Database.connect();
  
-  if (!receita) {
+  if (id) {
+    const sql = `
+      SELECT
+        id, img, tag, title, time, servings, author, ingredients, steps
+      FROM
+        receitas
+      WHERE
+        id = ?
+    `;
+ 
+    const receita = await db.get(sql, [id]);
+ 
+    if (receita) {
+      return {
+        ...receita,
+        ingredients: JSON.parse(receita.ingredients),
+        steps: JSON.parse(receita.steps),
+      };
+    } else {
+      throw new Error('Receita não encontrada');
+    }
+  } else {
     throw new Error('Receita não encontrada');
   }
- 
-  return receita;
 }
  
-function update(data) {
+async function update(data) {
+  const db = await Database.connect();
+ 
   const { id, img, tag, title, time, servings, author, ingredients, steps } = data;
  
-  if (!img || !tag || !title || !time || !servings || !author || !ingredients || !steps) {
+  if (img && tag && title && time && servings && author && ingredients && steps && id) {
+    const sql = `
+      UPDATE
+        receitas
+      SET
+        img = ?, tag = ?, title = ?, time = ?, servings = ?, author = ?, ingredients = ?, steps = ?
+      WHERE
+        id = ?
+    `;
+ 
+    const { changes } = await db.run(sql, [
+      img,
+      tag,
+      title,
+      time,
+      Number(servings),
+      author,
+      JSON.stringify(ingredients),
+      JSON.stringify(steps),
+      id,
+    ]);
+ 
+    if (changes === 1) {
+      return await readById(id);
+    } else {
+      throw new Error('Receita não encontrada');
+    }
+  } else {
     throw new Error('Todos os campos são obrigatórios');
   }
- 
-  const index = receitas.findIndex((r) => r.id === id);
- 
-  if (index === -1) {
-    throw new Error('Receita não encontrada');
-  }
- 
-  const duplicate = receitas.find(
-    (r) =>
-      r.id !== id &&
-      r.title === title &&
-      r.author === author &&
-      r.time === time &&
-      r.tag === tag &&
-      r.servings === Number(servings) &&
-      JSON.stringify(r.ingredients) === JSON.stringify(ingredients) &&
-      JSON.stringify(r.steps) === JSON.stringify(steps)
-  );
- 
-  if (duplicate) {
-    throw new Error('Receita já cadastrada');
-  }
- 
-  const receita = { id, img, tag, title, time, servings: Number(servings), author, ingredients, steps };
- 
-  receitas[index] = receita;
- 
-  return receita;
 }
  
-function remove(id) {
-  const index = receitas.findIndex((r) => r.id === id);
+async function remove(id) {
+  const db = await Database.connect();
  
-  if (index === -1) {
+  if (id) {
+    const sql = `
+      DELETE FROM
+        receitas
+      WHERE
+        id = ?
+    `;
+ 
+    const { changes } = await db.run(sql, [id]);
+ 
+    if (changes === 1) {
+      return true;
+    } else {
+      throw new Error('Receita não encontrada');
+    }
+  } else {
     throw new Error('Receita não encontrada');
   }
- 
-  receitas.splice(index, 1);
- 
-  return true;
 }
  
 export default { create, read, readById, update, remove };

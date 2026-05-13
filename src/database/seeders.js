@@ -1,6 +1,6 @@
 import { resolve } from 'node:path';
 import { readFileSync } from 'node:fs';
-import Receita from '../models/receitas.js';
+import Receita from '../models/Receita.js';
  
 async function up() {
   const file = resolve('src', 'database', 'seeders.json');
@@ -13,4 +13,5 @@ async function up() {
 }
  
 export default { up };
- 
+
+// removido os id do seeders.json, pois o banco vai gerá-los automaticamente
