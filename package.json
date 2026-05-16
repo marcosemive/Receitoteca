@@ -10,7 +10,9 @@
     "db:reload": "npm run db:drop && npm run db:load"
   },
   "dependencies": {
+    "bcrypt": "^5.1.1",
     "express": "^5.2.1",
+    "jsonwebtoken": "^9.0.3",
     "morgan": "^1.10.1",
     "multer": "^2.1.1",
     "sqlite-async": "^1.2.2"
