@@ -1,22 +1,40 @@
 import { initBusca, abrirReceita, fecharReceita, renderizarCards } from './modules/ui.js';
 import { abrirFormCriar, abrirFormEditar, salvarReceita } from './modules/chef.js';
-import { initNavegacao, restaurarLayoutNormal, mostrarChefArea, mostrarInicio } from './modules/navegacao.js';
+import { initNavegacao, restaurarLayoutNormal } from './modules/navegacao.js';
 import { toggleTagSelector, atualizarTag, fecharForm, initUploadFoto } from './modules/utils.js';
 import { getReceitas } from './api.js';
-localStorage.setItem("chefLogado", "true");
-localStorage.setItem("chefNome", "Paulo Benetton");
 
-  document.addEventListener("DOMContentLoaded", async () => {
+// Redireciona para login se não houver sessão ativa
+const token = localStorage.getItem('token');
+const tipo = localStorage.getItem('tipo');
+
+if (!token) {
+  window.location.href = 'login.html';
+}
+
+document.addEventListener('DOMContentLoaded', async () => {
   const receitas = await getReceitas();
 
-  renderizarCards(receitas)
+  renderizarCards(receitas);
   initBusca();
   initNavegacao();
   initUploadFoto();
 
-  const btnCriar = document.getElementById("btnCriarReceita");
-  const btnEditar = document.getElementById("btnEditarReceita");
-  const btnSalvar = document.getElementById("btnSalvarReceita");
+  // Mostra/oculta "Área do Chef" conforme o tipo de usuário logado
+  const linkChef = document.getElementById('link-chef');
+  const linkFavoritos = document.getElementById('link-favoritos');
+
+  if (tipo === 'chef') {
+    if (linkChef) linkChef.style.display = 'inline';
+    if (linkFavoritos) linkFavoritos.style.display = 'none';
+  } else {
+    if (linkChef) linkChef.style.display = 'none';
+    if (linkFavoritos) linkFavoritos.style.display = 'inline';
+  }
+
+  const btnCriar = document.getElementById('btnCriarReceita');
+  const btnEditar = document.getElementById('btnEditarReceita');
+  const btnSalvar = document.getElementById('btnSalvarReceita');
 
   if (btnCriar) btnCriar.onclick = abrirFormCriar;
   if (btnEditar) btnEditar.onclick = abrirFormEditar;

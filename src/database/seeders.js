@@ -1,17 +1,24 @@
 import { resolve } from 'node:path';
 import { readFileSync } from 'node:fs';
-import Receita from '../models/Receita.js';
- 
+import Receita from '../models/receita.js';
+import Chef from '../models/chef.js';
+import Etiqueta from '../models/etiqueta.js';
+
 async function up() {
   const file = resolve('src', 'database', 'seeders.json');
- 
   const seed = JSON.parse(readFileSync(file));
- 
+
+  for (const etiqueta of seed.etiquetas) {
+    await Etiqueta.create(etiqueta);
+  }
+
+  for (const chef of seed.chefs) {
+    await Chef.create(chef);
+  }
+
   for (const receita of seed.receitas) {
     await Receita.create(receita);
   }
 }
- 
-export default { up };
 
-// removido os id do seeders.json, pois o banco vai gerá-los automaticamente
+export default { up };

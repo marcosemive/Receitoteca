@@ -18,12 +18,13 @@
       <nav class="menu">
         <a href="#" id="link-inicio">Início</a>
         <a href="#receitas" id="link-receitas">Receitas</a>
-        <a href="#">Favoritas</a>
+        <a href="#" id="link-favoritos">Favoritas</a>
         <a href="#" id="link-chef">Área do Chef</a>
       </nav>
 
       <div class="nav-actions">
         <input type="text" placeholder="Buscar receitas..." class="search">
+        <span id="nav-nome" class="nav-nome"></span>
         <button class="logout" title="Sair">
           <img src="images/logout.png" alt="Sair">
         </button>
@@ -46,10 +47,19 @@
       <h2>Receitas recentes</h2>
       <p>Melhores receitas recentemente adicionadas pelos chefs</p>
     </div>
-
     <section class="recipes-grid"></section>
   </section>
 
+  <!-- Seção de favoritos (só usuário) -->
+  <section id="favoritos-area" class="home-container" style="display:none;">
+    <div class="section-header">
+      <h2>Minhas Favoritas</h2>
+      <p>Receitas que você salvou</p>
+    </div>
+    <section id="favoritos-grid" class="recipes-grid"></section>
+  </section>
+
+  <!-- Modal de visualização de receita -->
   <div class="overlay" id="overlay">
     <div class="receita-modal">
       <button class="close" onclick="fecharReceita()">✕</button>
@@ -66,7 +76,10 @@
         <span id="modal-time">⏱</span>
         <span id="modal-servings">👥</span>
         <span id="modal-author">👨‍🍳</span>
-        <div class="modal-actions">❤️ 💬</div>
+        <div class="modal-actions">
+          <button id="modal-fav" style="background:none;border:none;font-size:22px;cursor:pointer;">🤍</button>
+          💬
+        </div>
       </div>
 
       <div class="modal-content">
@@ -83,6 +96,7 @@
     </div>
   </div>
 
+  <!-- Modal de criação/edição de receita (só chef) -->
   <div id="chef-form-overlay" class="overlay">
     <div class="premium-modal">
       <div class="modal-image-header">
@@ -111,9 +125,8 @@
 
           <div class="action-btn" onclick="fecharForm()">
             <div class="icon-circle">✕</div>
-            <span>Desativar guia</span>
+            <span>Cancelar</span>
           </div>
-          <input type="file" id="input-file" style="display:none;">
         </div>
       </div>
 
@@ -139,7 +152,7 @@
             <span class="meta-icon">👤</span>
             <div class="meta-text">
               <label>Feito por:</label>
-              <strong>Paulo Benetton</strong>
+              <strong id="form-chef-nome"></strong>
             </div>
           </div>
         </div>
@@ -158,12 +171,13 @@
 
         <div class="modal-footer-btns">
           <button id="btnSalvarReceita" class="btn-save-gray">Salvar Receita</button>
-          <button class="btn-share-outline">Compartilhar em outros locais</button>
+          <button class="btn-share-outline" onclick="fecharForm()">Cancelar</button>
         </div>
       </div>
     </div>
   </div>
 
+  <!-- Área do chef -->
   <section id="chef-area" class="chef-area" style="display: none;">
     <h2 class="chef-title">Área do Chef</h2>
     <p class="chef-sub">Gerencie suas receitas</p>
@@ -175,8 +189,6 @@
 
     <div id="chef-lista-receitas" class="chef-recipe-list"></div>
   </section>
-
- 
 
   <script type="module" src="js/main.js"></script>
 </body>
