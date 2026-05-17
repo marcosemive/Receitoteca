@@ -13,6 +13,10 @@
   padding: 34px 44px;
 }
 
+.card2 {
+  padding-bottom: 24px;
+}
+
 .card h1, .card2 h1 {
   font-size: 28px;
   text-align: center;

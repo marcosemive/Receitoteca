@@ -2,6 +2,16 @@ import { carregarReceitasDoChef } from './chef.js';
 import { renderizarCards } from './ui.js';
 import { getFavoritos, getReceitas } from '../api.js';
 
+function mostrarSearch() {
+  const search = document.querySelector('.search');
+  if (search) search.style.display = 'block';
+}
+
+function esconderSearch() {
+  const search = document.querySelector('.search');
+  if (search) search.style.display = 'none';
+}
+
 export async function restaurarLayoutNormal() {
   const hero = document.getElementById('hero');
   const receitasSection = document.getElementById('receitas');
@@ -12,6 +22,8 @@ export async function restaurarLayoutNormal() {
   if (receitasSection) receitasSection.style.display = 'block';
   if (chefArea) chefArea.style.display = 'none';
   if (favoritosSection) favoritosSection.style.display = 'none';
+
+  mostrarSearch();
 
   const grid = document.querySelector('#receitas .recipes-grid');
   if (grid) {
@@ -30,6 +42,8 @@ export function mostrarChefArea() {
   if (receitasPublicas) receitasPublicas.style.display = 'none';
   if (favoritosSection) favoritosSection.style.display = 'none';
 
+  esconderSearch();
+
   if (areaChef) {
     areaChef.style.display = 'block';
     carregarReceitasDoChef();
@@ -46,6 +60,8 @@ export async function mostrarFavoritos() {
   if (hero) hero.style.display = 'none';
   if (receitasPublicas) receitasPublicas.style.display = 'none';
   if (areaChef) areaChef.style.display = 'none';
+
+  esconderSearch();
 
   if (favoritosSection) {
     favoritosSection.style.display = 'block';
@@ -64,7 +80,6 @@ export async function mostrarFavoritos() {
 }
 
 export function initNavegacao() {
-  const tipo = localStorage.getItem('tipo');
   const nome = localStorage.getItem('nome');
 
   const nomeEl = document.getElementById('nav-nome');
