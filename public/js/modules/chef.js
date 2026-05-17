@@ -4,6 +4,7 @@ import { renderizarCards } from './ui.js';
 import { getReceitas } from '../api.js';
 
 let modoEdicao = null;
+let salvando = false; // ← trava contra cliques múltiplos
 
 export async function carregarReceitasDoChef() {
   const lista = document.getElementById('chef-lista-receitas');
@@ -48,6 +49,7 @@ function limparForm() {
   document.getElementById('input-foto').value = '';
   document.getElementById('btnSalvarReceita').innerText = 'Salvar Receita';
   modoEdicao = null;
+  salvando = false;
 }
 
 export function abrirFormCriar() {
@@ -71,6 +73,7 @@ export async function editarReceita(id) {
 
   document.getElementById('input-foto').value = '';
   modoEdicao = id;
+  salvando = false;
 
   const etiquetaNome = r.etiqueta?.nome || 'Salgada';
   document.getElementById('form-tag-display').innerText = etiquetaNome;
@@ -92,6 +95,19 @@ export async function editarReceita(id) {
 export async function salvarReceita(e) {
   e.preventDefault();
 
+  // Se já está salvando, ignora completamente o clique
+  if (salvando) return;
+
+  const btn = document.getElementById('btnSalvarReceita');
+  const textoOriginal = btn.innerText;
+
+  // Ativa a trava e desabilita o botão visualmente
+  salvando = true;
+  btn.disabled = true;
+  btn.innerText = 'Salvando...';
+  btn.style.opacity = '0.6';
+  btn.style.cursor = 'not-allowed';
+
   const titulo = document.getElementById('form-titulo-overlay').innerText;
   const etiqueta = document.getElementById('form-tag-display').innerText;
   const tempo = document.getElementById('form-time').value;
@@ -103,35 +119,46 @@ export async function salvarReceita(e) {
   const preview = document.getElementById('form-img-preview');
   let imgPath = modoEdicao ? (preview.dataset.originalImg || preview.src) : preview.src;
 
-  if (inputFoto.files[0]) {
-    imgPath = await uploadImagem(inputFoto.files[0]);
-  }
-
-  const dadosReceita = {
-    title: titulo,
-    etiqueta: etiqueta,
-    img: imgPath,
-    time: tempo,
-    servings: porcoes,
-    ingredients: ingredientes,
-    steps: passos
-  };
-
   try {
-    if (modoEdicao) {
-      await atualizarReceita(modoEdicao, dadosReceita);
-      alert('Alterações salvas!');
-    } else {
-      await criarReceita(dadosReceita);
-      alert('Nova receita publicada!');
+    if (inputFoto.files[0]) {
+      imgPath = await uploadImagem(inputFoto.files[0]);
     }
 
-    const receitas = await getReceitas();
-    renderizarCards(receitas);
-    modoEdicao = null;
+    const dadosReceita = {
+      title: titulo,
+      etiqueta: etiqueta,
+      img: imgPath,
+      time: tempo,
+      servings: porcoes,
+      ingredients: ingredientes,
+      steps: passos
+    };
+
+    if (modoEdicao) {
+      await atualizarReceita(modoEdicao, dadosReceita);
+    } else {
+      await criarReceita(dadosReceita);
+    }
+
+    // Fecha o form antes do alert para não dar chance de novo clique
     fecharForm();
+
+    const receitas = await getReceitas();
+    const grid = document.querySelector('#receitas .recipes-grid');
+    renderizarCards(receitas, grid);
     await carregarReceitasDoChef();
+
+    alert(modoEdicao ? 'Alterações salvas!' : 'Nova receita publicada!');
+    modoEdicao = null;
+
   } catch (err) {
+    // Se der erro, reabilita o botão para o usuário tentar de novo
+    btn.disabled = false;
+    btn.innerText = textoOriginal;
+    btn.style.opacity = '1';
+    btn.style.cursor = 'pointer';
+    salvando = false;
+
     alert(err.message);
   }
 }
@@ -141,7 +168,8 @@ async function deletarReceitaChef(id) {
   try {
     await deletarReceita(id);
     const receitas = await getReceitas();
-    renderizarCards(receitas);
+    const grid = document.querySelector('#receitas .recipes-grid');
+    renderizarCards(receitas, grid);
     await carregarReceitasDoChef();
   } catch (err) {
     alert(err.message);

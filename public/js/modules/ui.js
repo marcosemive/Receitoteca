@@ -1,10 +1,16 @@
 import { getReceita, favoritarReceita, desfavoritarReceita, getFavoritos } from '../api.js';
 
-export function renderizarCards(receitas) {
-  const grid = document.querySelector('.recipes-grid');
-  if (!grid) return;
+export function renderizarCards(receitas, grid = null) {
+  // Se não passar um grid específico, usa o da página inicial
+  const container = grid || document.querySelector('#receitas .recipes-grid');
+  if (!container) return;
 
-  grid.innerHTML = '';
+  container.innerHTML = '';
+
+  if (receitas.length === 0) {
+    container.innerHTML = '<p style="color:#888; padding: 16px;">Nenhuma receita encontrada.</p>';
+    return;
+  }
 
   receitas.forEach(r => {
     const card = document.createElement('article');
@@ -30,7 +36,7 @@ export function renderizarCards(receitas) {
       </div>
     `;
 
-    grid.appendChild(card);
+    container.appendChild(card);
   });
 }
 
@@ -39,7 +45,7 @@ export function initBusca() {
   if (searchInput) {
     searchInput.addEventListener('input', function () {
       const termo = this.value.toLowerCase();
-      const cards = document.querySelectorAll('.recipe-card');
+      const cards = document.querySelectorAll('#receitas .recipe-card');
       cards.forEach(card => {
         const titulo = card.querySelector('h3').innerText.toLowerCase();
         card.style.display = titulo.includes(termo) ? 'block' : 'none';
@@ -62,7 +68,6 @@ export async function abrirReceita(id) {
   document.getElementById('modal-servings').innerText = `👥 ${r.servings}`;
   document.getElementById('modal-author').innerText = `👨‍🍳 ${r.chef?.nome || ''}`;
 
-  // Botão de favorito — só para usuários
   const btnFav = document.getElementById('modal-fav');
   if (btnFav) {
     if (tipo === 'usuario' && token) {
@@ -98,7 +103,6 @@ export function fecharReceita() {
   document.getElementById('overlay').classList.remove('active');
 }
 
-// Alterna favorito ao clicar no botão do modal
 document.addEventListener('DOMContentLoaded', () => {
   const btnFav = document.getElementById('modal-fav');
   if (btnFav) {

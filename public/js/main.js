@@ -4,7 +4,6 @@ import { initNavegacao, restaurarLayoutNormal } from './modules/navegacao.js';
 import { toggleTagSelector, atualizarTag, fecharForm, initUploadFoto } from './modules/utils.js';
 import { getReceitas } from './api.js';
 
-// Redireciona para login se não houver sessão ativa
 const token = localStorage.getItem('token');
 const tipo = localStorage.getItem('tipo');
 
@@ -13,14 +12,15 @@ if (!token) {
 }
 
 document.addEventListener('DOMContentLoaded', async () => {
+  // Carrega receitas públicas no grid correto
   const receitas = await getReceitas();
+  const grid = document.querySelector('#receitas .recipes-grid');
+  renderizarCards(receitas, grid);
 
-  renderizarCards(receitas);
   initBusca();
   initNavegacao();
   initUploadFoto();
 
-  // Mostra/oculta "Área do Chef" conforme o tipo de usuário logado
   const linkChef = document.getElementById('link-chef');
   const linkFavoritos = document.getElementById('link-favoritos');
 
