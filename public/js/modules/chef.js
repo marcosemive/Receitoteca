@@ -4,7 +4,7 @@ import { renderizarCards } from './ui.js';
 import { getReceitas } from '../api.js';
 
 let modoEdicao = null;
-let salvando = false; // ← trava contra cliques múltiplos
+let salvando = false; // trava contra cliques múltiplos
 
 export async function carregarReceitasDoChef() {
   const lista = document.getElementById('chef-lista-receitas');
@@ -95,13 +95,11 @@ export async function editarReceita(id) {
 export async function salvarReceita(e) {
   e.preventDefault();
 
-  // Se já está salvando, ignora completamente o clique
   if (salvando) return;
 
   const btn = document.getElementById('btnSalvarReceita');
   const textoOriginal = btn.innerText;
 
-  // Ativa a trava e desabilita o botão visualmente
   salvando = true;
   btn.disabled = true;
   btn.innerText = 'Salvando...';
@@ -152,7 +150,7 @@ export async function salvarReceita(e) {
     modoEdicao = null;
 
   } catch (err) {
-    // Se der erro, reabilita o botão para o usuário tentar de novo
+    // erro pra reabilitar o botão para o usuário tentar de novo
     btn.disabled = false;
     btn.innerText = textoOriginal;
     btn.style.opacity = '1';

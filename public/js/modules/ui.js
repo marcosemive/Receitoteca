@@ -1,7 +1,6 @@
 import { getReceita, favoritarReceita, desfavoritarReceita, getFavoritos } from '../api.js';
 
 export function renderizarCards(receitas, grid = null) {
-  // Se não passar um grid específico, usa o da página inicial
   const container = grid || document.querySelector('#receitas .recipes-grid');
   if (!container) return;
 

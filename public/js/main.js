@@ -12,7 +12,6 @@ if (!token) {
 }
 
 document.addEventListener('DOMContentLoaded', async () => {
-  // Carrega receitas públicas no grid correto
   const receitas = await getReceitas();
   const grid = document.querySelector('#receitas .recipes-grid');
   renderizarCards(receitas, grid);

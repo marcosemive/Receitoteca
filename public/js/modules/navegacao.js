@@ -13,7 +13,6 @@ export async function restaurarLayoutNormal() {
   if (chefArea) chefArea.style.display = 'none';
   if (favoritosSection) favoritosSection.style.display = 'none';
 
-  // Recarrega todas as receitas públicas no grid da página inicial
   const grid = document.querySelector('#receitas .recipes-grid');
   if (grid) {
     const receitas = await getReceitas();

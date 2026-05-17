@@ -12,7 +12,6 @@ async function create(data) {
       throw new Error('Por favor, altere o nome da receita');
     }
 
-    // Resolve chef_id: seed usa chef_email, rotas autenticadas já têm chef_id
     let resolvedChefId = chef_id;
     if (!resolvedChefId && chef_email) {
       const chef = await Chef.readByEmail(chef_email);
@@ -35,7 +34,6 @@ async function create(data) {
       JSON.stringify(steps),
     ]);
 
-    // Vincula a etiqueta
     const etiquetaObj = await Etiqueta.readByNome(etiqueta);
     if (!etiquetaObj) throw new Error('Etiqueta não encontrada');
 
