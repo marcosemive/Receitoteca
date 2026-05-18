@@ -67,7 +67,7 @@
       <div class="modal-hero">
         <img id="modal-img" src="" alt="Imagem da receita">
         <div class="modal-hero-content">
-          <span class="tag" id="modal-tag"></span>
+          <div id="modal-tags" style="display:flex;flex-wrap:wrap;gap:4px;"></div>
           <h2 id="modal-title"></h2>
         </div>
       </div>
@@ -104,13 +104,7 @@
 
         <div class="header-text-overlay">
           <div class="tags-row">
-            <div class="tag-wrapper">
-              <span class="tag-label status" id="form-tag-display" onclick="toggleTagSelector()" style="cursor: pointer;">Salgada</span>
-              <select id="form-tag-select" onchange="atualizarTag(this.value)" style="display: none;">
-                <option value="Salgada">Salgada</option>
-                <option value="Doce">Doce</option>
-                <option value="Vegana">Vegana</option>
-              </select>
+            <div id="etiquetas-wrapper" style="position:relative; width:100%; max-width:320px;">
             </div>
           </div>
           <h2 id="form-titulo-overlay" contenteditable="true">Nome da Receita</h2>

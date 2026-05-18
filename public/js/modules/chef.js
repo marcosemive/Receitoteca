@@ -1,10 +1,10 @@
-import { fecharForm } from './utils.js';
+import { fecharForm, getEtiquetasSelecionadas, setEtiquetasSelecionadas, initEtiquetasDropdown, atualizarDisplayEtiquetas } from './utils.js';
 import { getReceitasDoChef, getReceita, criarReceita, atualizarReceita, deletarReceita, uploadImagem } from '../api.js';
 import { renderizarCards } from './ui.js';
 import { getReceitas } from '../api.js';
 
 let modoEdicao = null;
-let salvando = false; // trava contra cliques múltiplos
+let salvando = false;
 
 export async function carregarReceitasDoChef() {
   const lista = document.getElementById('chef-lista-receitas');
@@ -37,19 +37,29 @@ export async function carregarReceitasDoChef() {
   }
 }
 
+function resetarBotao(texto = 'Salvar Receita') {
+  const btn = document.getElementById('btnSalvarReceita');
+  btn.disabled = false;
+  btn.innerText = texto;
+  btn.style.opacity = '1';
+  btn.style.cursor = 'pointer';
+  salvando = false;
+}
+
 function limparForm() {
   document.getElementById('form-titulo-overlay').innerText = 'Nome da Receita';
-  document.getElementById('form-tag-display').innerText = 'Salgada';
-  if (typeof window.atualizarTag === 'function') window.atualizarTag('Salgada');
   document.getElementById('form-img-preview').src = 'images/placeholder-receita.png';
   document.getElementById('form-time').value = '';
   document.getElementById('form-servings').value = '4';
   document.getElementById('form-ingredients').value = '';
   document.getElementById('form-steps').value = '';
   document.getElementById('input-foto').value = '';
-  document.getElementById('btnSalvarReceita').innerText = 'Salvar Receita';
+
+  // Desmarca todas as etiquetas
+  setEtiquetasSelecionadas([]);
+
   modoEdicao = null;
-  salvando = false;
+  resetarBotao('Salvar Receita');
 }
 
 export function abrirFormCriar() {
@@ -73,11 +83,11 @@ export async function editarReceita(id) {
 
   document.getElementById('input-foto').value = '';
   modoEdicao = id;
-  salvando = false;
+  resetarBotao('Atualizar Receita');
 
-  const etiquetaNome = r.etiqueta?.nome || 'Salgada';
-  document.getElementById('form-tag-display').innerText = etiquetaNome;
-  if (typeof window.atualizarTag === 'function') window.atualizarTag(etiquetaNome);
+  // Marca as etiquetas que a receita já tem
+  const nomesEtiquetas = (r.etiquetas || []).map(e => e.nome);
+  setEtiquetasSelecionadas(nomesEtiquetas);
 
   const preview = document.getElementById('form-img-preview');
   preview.src = r.img || 'images/default.png';
@@ -88,7 +98,6 @@ export async function editarReceita(id) {
   document.getElementById('form-servings').value = r.servings;
   document.getElementById('form-ingredients').value = r.ingredients.join('\n');
   document.getElementById('form-steps').value = r.steps.join('\n');
-  document.getElementById('btnSalvarReceita').innerText = 'Atualizar Receita';
   document.getElementById('chef-form-overlay').style.display = 'flex';
 }
 
@@ -107,15 +116,23 @@ export async function salvarReceita(e) {
   btn.style.cursor = 'not-allowed';
 
   const titulo = document.getElementById('form-titulo-overlay').innerText;
-  const etiqueta = document.getElementById('form-tag-display').innerText;
+  const etiquetas = getEtiquetasSelecionadas(); // ← array de strings
   const tempo = document.getElementById('form-time').value;
   const porcoes = document.getElementById('form-servings').value;
   const ingredientes = document.getElementById('form-ingredients').value.split('\n').filter(Boolean);
   const passos = document.getElementById('form-steps').value.split('\n').filter(Boolean);
 
+  if (etiquetas.length === 0) {
+    alert('Selecione ao menos uma etiqueta.');
+    resetarBotao(textoOriginal);
+    return;
+  }
+
   const inputFoto = document.getElementById('input-foto');
   const preview = document.getElementById('form-img-preview');
   let imgPath = modoEdicao ? (preview.dataset.originalImg || preview.src) : preview.src;
+
+  const eraModoEdicao = modoEdicao;
 
   try {
     if (inputFoto.files[0]) {
@@ -124,7 +141,7 @@ export async function salvarReceita(e) {
 
     const dadosReceita = {
       title: titulo,
-      etiqueta: etiqueta,
+      etiquetas: etiquetas,   // ← array enviado para o backend
       img: imgPath,
       time: tempo,
       servings: porcoes,
@@ -132,31 +149,24 @@ export async function salvarReceita(e) {
       steps: passos
     };
 
-    if (modoEdicao) {
-      await atualizarReceita(modoEdicao, dadosReceita);
+    if (eraModoEdicao) {
+      await atualizarReceita(eraModoEdicao, dadosReceita);
     } else {
       await criarReceita(dadosReceita);
     }
 
-    // Fecha o form antes do alert para não dar chance de novo clique
     fecharForm();
+    limparForm();
 
     const receitas = await getReceitas();
     const grid = document.querySelector('#receitas .recipes-grid');
     renderizarCards(receitas, grid);
     await carregarReceitasDoChef();
 
-    alert(modoEdicao ? 'Alterações salvas!' : 'Nova receita publicada!');
-    modoEdicao = null;
+    alert(eraModoEdicao ? 'Alterações salvas!' : 'Nova receita publicada!');
 
   } catch (err) {
-    // erro pra reabilitar o botão para o usuário tentar de novo
-    btn.disabled = false;
-    btn.innerText = textoOriginal;
-    btn.style.opacity = '1';
-    btn.style.cursor = 'pointer';
-    salvando = false;
-
+    resetarBotao(textoOriginal);
     alert(err.message);
   }
 }
@@ -172,6 +182,10 @@ async function deletarReceitaChef(id) {
   } catch (err) {
     alert(err.message);
   }
+}
+
+export function initFormEtiquetas() {
+  initEtiquetasDropdown();
 }
 
 window.abrirFormCriar = abrirFormCriar;

@@ -1,14 +1,42 @@
 {
   "etiquetas": [
-    { "nome": "Salgada" },
-    { "nome": "Doce" },
-    { "nome": "Vegana" }
+    {"nome": "Salgada"},
+    {"nome": "Doce"},
+    {"nome": "Vegana"},
+    {"nome": "Low Carb"},
+    {"nome": "Sem Glúten"},
+    {"nome": "Sem Lactose"},
+    {"nome": "Vegetariana"},
+    {"nome": "Sem Açúcar"},
+    {"nome": "Sem Ovo"},
+    {"nome": "Sem Soja"},
+    {"nome": "Integral"},
+    {"nome": "Rica em Proteína"},
+    {"nome": "Poucas Calorias"},
+    {"nome": "Sem Conservantes"},
+    {"nome": "Sem Gordura"}
   ],
   "chefs": [
-    { "nome": "Paulo Benetton",   "email": "paulo@receitoteca.com",    "senha": "Paulo@123" },
-    { "nome": "Sandra Freitas",   "email": "sandra@receitoteca.com",   "senha": "Sandra@123" },
-    { "nome": "Gabriela Carvalho","email": "gabriela@receitoteca.com", "senha": "Gabriela@123" },
-    { "nome": "Leonardo Matias",  "email": "leonardo@receitoteca.com", "senha": "Leonardo@123" }
+    {
+      "nome": "Paulo Benetton",
+      "email": "paulo@receitoteca.com",
+      "senha": "Paulo@123"
+    },
+    {
+      "nome": "Sandra Freitas",
+      "email": "sandra@receitoteca.com",
+      "senha": "Sandra@123"
+    },
+    {
+      "nome": "Gabriela Carvalho",
+      "email": "gabriela@receitoteca.com",
+      "senha": "Gabriela@123"
+    },
+    {
+      "nome": "Leonardo Matias",
+      "email": "leonardo@receitoteca.com",
+      "senha": "Leonardo@123"
+    }
   ],
   "receitas": [
     {
@@ -18,8 +46,18 @@
       "time": "30 min",
       "servings": 4,
       "chef_email": "paulo@receitoteca.com",
-      "ingredients": ["500g de macarrão","4 ovos","Queijo parmesão","Pimenta-do-reino"],
-      "steps": ["Cozinhe o macarrão","Misture ovos e queijo","Incorpore tudo ainda quente","Finalize com pimenta"]
+      "ingredients": [
+        "500g de macarrão",
+        "4 ovos",
+        "Queijo parmesão",
+        "Pimenta-do-reino"
+      ],
+      "steps": [
+        "Cozinhe o macarrão",
+        "Misture ovos e queijo",
+        "Incorpore tudo ainda quente",
+        "Finalize com pimenta"
+      ]
     },
     {
       "img": "images/brigadeiro.png",
@@ -28,8 +66,18 @@
       "time": "60 min",
       "servings": 8,
       "chef_email": "sandra@receitoteca.com",
-      "ingredients": ["Chocolate belga","Leite condensado","Manteiga","Ovos"],
-      "steps": ["Prepare a massa","Asse o bolo","Faça a cobertura","Finalize"]
+      "ingredients": [
+        "Chocolate belga",
+        "Leite condensado",
+        "Manteiga",
+        "Ovos"
+      ],
+      "steps": [
+        "Prepare a massa",
+        "Asse o bolo",
+        "Faça a cobertura",
+        "Finalize"
+      ]
     },
     {
       "img": "images/salada.png",
@@ -38,8 +86,17 @@
       "time": "15 min",
       "servings": 2,
       "chef_email": "gabriela@receitoteca.com",
-      "ingredients": ["Alface","Tomate","Pepino","Azeite e sal"],
-      "steps": ["Lave os ingredientes","Corte tudo","Tempere e sirva"]
+      "ingredients": [
+        "Alface",
+        "Tomate",
+        "Pepino",
+        "Azeite e sal"
+      ],
+      "steps": [
+        "Lave os ingredientes",
+        "Corte tudo",
+        "Tempere e sirva"
+      ]
     },
     {
       "img": "images/panqueca.png",
@@ -48,8 +105,17 @@
       "time": "25 min",
       "servings": 4,
       "chef_email": "leonardo@receitoteca.com",
-      "ingredients": ["Farinha","Leite","Ovos","Fermento"],
-      "steps": ["Misture os ingredientes","Aqueça a frigideira","Asse dos dois lados"]
+      "ingredients": [
+        "Farinha",
+        "Leite",
+        "Ovos",
+        "Fermento"
+      ],
+      "steps": [
+        "Misture os ingredientes",
+        "Aqueça a frigideira",
+        "Asse dos dois lados"
+      ]
     }
   ]
 }

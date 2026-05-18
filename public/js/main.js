@@ -1,7 +1,7 @@
 import { initBusca, abrirReceita, fecharReceita, renderizarCards } from './modules/ui.js';
-import { abrirFormCriar, abrirFormEditar, salvarReceita } from './modules/chef.js';
-import { initNavegacao, restaurarLayoutNormal } from './modules/navegacao.js';
-import { toggleTagSelector, atualizarTag, fecharForm, initUploadFoto } from './modules/utils.js';
+import { abrirFormCriar, abrirFormEditar, salvarReceita, initFormEtiquetas } from './modules/chef.js';
+import { initNavegacao } from './modules/navegacao.js';
+import { fecharForm, initUploadFoto } from './modules/utils.js';
 import { getReceitas } from './api.js';
 
 const token = localStorage.getItem('token');
@@ -19,6 +19,7 @@ document.addEventListener('DOMContentLoaded', async () => {
   initBusca();
   initNavegacao();
   initUploadFoto();
+  initFormEtiquetas(); // ← inicializa o dropdown de etiquetas
 
   const linkChef = document.getElementById('link-chef');
   const linkFavoritos = document.getElementById('link-favoritos');

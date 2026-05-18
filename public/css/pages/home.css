@@ -226,3 +226,31 @@
     grid-template-columns: 1fr;
   }
 }
+.nav-nome {
+  font-size: 14px;
+  font-weight: 600;
+  color: #444;
+  white-space: nowrap;
+}
+
+/* Pills de etiqueta no formulário */
+.tag-pill {
+  display: inline-block;
+  background: #e70731;
+  color: #fff;
+  font-size: 11px;
+  font-weight: 600;
+  padding: 3px 8px;
+  border-radius: 12px;
+  white-space: nowrap;
+}
+
+/* Múltiplas tags no card e no modal */
+.tags-container {
+  position: absolute;
+  top: 8px;
+  left: 8px;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 4px;
+}

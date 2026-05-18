@@ -398,6 +398,16 @@
   display: inline-block;
 }
 
+#etiquetas-dropdown label {
+  color: #333 !important;
+  font-weight: normal !important;
+  font-size: 13px !important;
+}
+
+#etiquetas-dropdown {
+  color: #333 !important;
+}
+
 #form-tag-select {
   position: absolute;
   top: 0;

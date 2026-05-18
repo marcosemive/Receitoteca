@@ -16,14 +16,18 @@ export function renderizarCards(receitas, grid = null) {
     card.className = 'recipe-card';
     card.setAttribute('onclick', `abrirReceita(${r.id})`);
 
-    const etiquetaNome = r.etiqueta?.nome || '';
-    const etiquetaClass = etiquetaNome.toLowerCase();
+    // Suporte a múltiplas etiquetas
+    const etiquetas = r.etiquetas || [];
+    const tagsHTML = etiquetas
+      .map(e => `<span class="tag ${e.nome.toLowerCase().replace(/\s+/g, '-')}">${e.nome}</span>`)
+      .join('');
+
     const primeiroIngrediente = r.ingredients[0] || 'Receita deliciosa';
 
     card.innerHTML = `
       <div class="recipe-image">
         <img src="${r.img}" alt="${r.title}">
-        <span class="tag ${etiquetaClass}">${etiquetaNome}</span>
+        <div class="tags-container">${tagsHTML}</div>
       </div>
       <div class="recipe-content">
         <h3>${r.title}</h3>
@@ -62,10 +66,18 @@ export async function abrirReceita(id) {
 
   document.getElementById('modal-img').src = r.img;
   document.getElementById('modal-title').innerText = r.title;
-  document.getElementById('modal-tag').innerText = r.etiqueta?.nome || '';
   document.getElementById('modal-time').innerText = `⏱ ${r.time}`;
   document.getElementById('modal-servings').innerText = `👥 ${r.servings}`;
   document.getElementById('modal-author').innerText = `👨‍🍳 ${r.chef?.nome || ''}`;
+
+  // Renderiza múltiplas etiquetas no modal
+  const modalTagContainer = document.getElementById('modal-tags');
+  if (modalTagContainer) {
+    const etiquetas = r.etiquetas || [];
+    modalTagContainer.innerHTML = etiquetas
+      .map(e => `<span class="tag ${e.nome.toLowerCase().replace(/\s+/g, '-')}">${e.nome}</span>`)
+      .join('');
+  }
 
   const btnFav = document.getElementById('modal-fav');
   if (btnFav) {
